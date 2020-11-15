@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func main() {
+func main1() {
 	engine := routers.GenerateEngine()
 
 	server := &http.Server{
@@ -43,5 +43,4 @@ func main() {
 			log.Warn().Str("error", err.Error()).Msg("服务器由于意外而关闭")
 		}
 	}
-
 }
