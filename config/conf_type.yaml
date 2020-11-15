@@ -1,0 +1,58 @@
+# conf_type.yaml只是配置文件的模板文件，正式使用的时候请改成自己的配置参数
+# 并将文件名改为conf
+
+## Gin相关设置
+Gin:
+  RunMode: debug
+  LogFile: 
+    ## 其完整格式是${pwd}/logs/gin.log
+    Windows: logs/gin.log
+    Linux: /var/log/mumori/gin.log
+  CORS:
+    Enable: true
+    ## 允许跨域请求的域名列表（*表示全部）
+    AllowOrigins:
+      - *
+    ## 允许跨域请求的请求方式列表
+    AllowMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - PATCH
+    ## 允许客户端与跨域请求一起使用的非简单标头列表
+    AllowHeaders:
+      - *
+    ## 请求是否可以包含cookie，HTTP身份验证或客户端SSL证书等用户凭据
+    AllowCredentials: true
+    ## 可以缓存预检请求结果的时间（以秒为单位）
+    MaxAge: 7200
+
+HTTP:
+  Addr: '127.0.0.1:8080'
+  ## 读取超时时间（以秒为单位）
+  ReadTimeout: 60
+  ## 写入超时时间（以秒为单位）
+  WriteTimeout: 60
+
+## 数据库相关设置
+Driver:
+  MySQL:
+    Host: '127.0.0.1:3306'
+    User: root
+    Password: password
+    Database: mumori
+    MaxIdleConns: 10
+    MaxOpenConns: 100
+  Redis:
+    Addr: '127.0.0.1:6379'
+    Password: 'password'
+    DB: 0
+
+## 日志相关设置
+Logger:
+  LogFile: 
+    ## 其完整格式是${pwd}/logs/logs/error.log
+    Windows: logs/error.log
+    Linux: /var/log/mumori/error.log
+  Level: debug
