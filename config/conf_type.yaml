@@ -56,3 +56,17 @@ Logger:
     Windows: logs/error.log
     Linux: /var/log/mumori/error.log
   Level: debug
+
+## 阿里云相关
+Aliyun:
+  ## 人机验证：https://help.aliyun.com/document_detail/122003.html?spm=a2c4g.11174283.6.565.2c6019f4G2TDx4
+  ## 短信服务：https://help.aliyun.com/document_detail/112150.html?spm=a2c4g.11186623.6.657.505e19d9qpt91f
+  SMS:
+    RegionID: cn-hangzhou
+    AccessKeyID: 
+    AccessKeySecret: 
+    AppKey: 
+    TemplateCode: 
+    SignName: 
+
+## 腾讯相关

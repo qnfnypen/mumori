@@ -25,16 +25,16 @@ func GenerateEngine() *gin.Engine {
 	if runtime.GOOS == "windows" {
 		path := viper.GetString("Gin.LogFile.Windows")
 		dir := filepath.Dir(path)
-		pwd,_ := os.Getwd()
-		filedir := fmt.Sprintf("%s/%s",pwd,dir)
-		os.MkdirAll(filedir,os.ModePerm)
-		file := fmt.Sprintf("%s/%s",pwd,path)
-		logFile,_ = os.OpenFile(file,os.O_CREATE|os.O_TRUNC|os.O_WRONLY,os.ModePerm)
-	}else{
-		path := viper.GetString("Gin.LogFile.Linux") 
+		pwd, _ := os.Getwd()
+		filedir := fmt.Sprintf("%s/%s", pwd, dir)
+		os.MkdirAll(filedir, os.ModePerm)
+		file := fmt.Sprintf("%s/%s", pwd, path)
+		logFile, _ = os.OpenFile(file, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.ModePerm)
+	} else {
+		path := viper.GetString("Gin.LogFile.Linux")
 		dir := filepath.Dir(path)
-		os.MkdirAll(dir,os.ModePerm)
-		logFile,_ = os.OpenFile(path,os.O_CREATE|os.O_TRUNC|os.O_WRONLY,os.ModePerm)
+		os.MkdirAll(dir, os.ModePerm)
+		logFile, _ = os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.ModePerm)
 	}
 	gin.DisableConsoleColor()
 	gin.DefaultWriter = io.MultiWriter(logFile)

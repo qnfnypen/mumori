@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func main1() {
+func main() {
 	engine := routers.GenerateEngine()
 
 	server := &http.Server{
