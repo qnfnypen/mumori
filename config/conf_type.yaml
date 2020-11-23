@@ -70,3 +70,12 @@ Aliyun:
     SignName: 
 
 ## 腾讯相关
+
+## 报警服务
+Alarm:
+  Email:
+    User:
+    ## 各邮件服务有所不同，有点是密码有点需要授权码，可以登录相关邮箱服务查看
+    Password:
+    Server:
+    Port:
