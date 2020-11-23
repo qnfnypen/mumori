@@ -3,36 +3,35 @@ package utils
 import (
 	// 读取配置文件
 	_ "github.com/qnfnypen/mumori/public"
-	"github.com/spf13/viper"
 	"gopkg.in/gomail.v2"
+
+	"github.com/spf13/viper"
 )
 
 type mailClient struct {
-	user     string
+	username string
 	password string
-	server   string
+	host     string
 	port     int
 }
 
 // SendMail 发送邮件
-func SendMail(mailto []string, subject, body string) error {
-	client := mailClient{
-		user:     viper.GetString("Alarm.Email.User"),
+func SendMail(to []string, subject, body string) error {
+	cli := mailClient{
+		username: viper.GetString("Alarm.Email.User"),
 		password: viper.GetString("Alarm.Email.Password"),
-		server:   viper.GetString("Alarm.Email.Server"),
-		port:     viper.GetInt("Alarm.Email.Port"),
+		host:     viper.GetString("Alarm.Email.Host"),
+		port:     viper.GetString("Alarm.Email.Port"),
 	}
 
 	m := gomail.NewMessage()
-	// 指定发件人
-	// m.SetHeader("From", viper.GetString("Alarm.Email.User"))
-	m.SetHeader("To", mailto...)
+	m.SetHeader("From", m.FormatAddress(cli.username, "木森云"))
+	m.SetHeader("To", to...)
 	m.SetHeader("Subject", subject)
-	m.SetBody("text/html", body)
-	// 添加附件
-	// m.Attach("log.txt")
+	m.SetBody("text/plain", body)
 
-	d := gomail.NewDialer(client.server, client.port, client.user, client.password)
+	d := gomail.NewDialer(cli.host, cli.port, cli.username, cli.password)
 	err := d.DialAndSend(m)
+
 	return err
 }
