@@ -21,7 +21,7 @@ func SendMail(to []string, subject, body string) error {
 		username: viper.GetString("Alarm.Email.User"),
 		password: viper.GetString("Alarm.Email.Password"),
 		host:     viper.GetString("Alarm.Email.Host"),
-		port:     viper.GetString("Alarm.Email.Port"),
+		port:     viper.GetInt("Alarm.Email.Port"),
 	}
 
 	m := gomail.NewMessage()
