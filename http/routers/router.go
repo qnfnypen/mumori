@@ -10,7 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 
+	"github.com/qnfnypen/mumori/http/controllers"
 	"github.com/qnfnypen/mumori/http/middleware"
+
 	// 读取配置文件
 	_ "github.com/qnfnypen/mumori/public"
 )
@@ -44,6 +46,14 @@ func GenerateEngine() *gin.Engine {
 	// 是否启用跨域
 	if viper.GetBool("Gin.CORS.Enable") {
 		engine.Use(middleware.CORSMiddleware())
+	}
+
+	auth := engine.Group("/auth")
+	{
+		auth.POST("/send_captcha", controllers.SendCaptcha)
+		auth.POST("/register", controllers.Register)
+		auth.POST("/login", controllers.Login)
+		auth.POST("/fast_login", controllers.FastLogin)
 	}
 
 	return engine

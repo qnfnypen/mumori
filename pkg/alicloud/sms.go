@@ -36,7 +36,7 @@ func init() {
 		viper.GetString("Aliyun.SMS.AccessKeySecret"),
 	)
 	if err != nil {
-		log.Fatal().Str("Error", err.Error()).Msg("阿里云人机验证客户端创建失败")
+		log.Fatal().Str("error", err.Error()).Msg("阿里云人机验证客户端创建失败")
 	}
 	a.smsClt, err = dysmsapi.NewClientWithAccessKey(
 		viper.GetString("Aliyun.SMS.RegionID"),
@@ -44,7 +44,7 @@ func init() {
 		viper.GetString("Aliyun.SMS.AccessKeySecret"),
 	)
 	if err != nil {
-		log.Fatal().Str("Error", err.Error()).Msg("阿里云短信客户端创建失败")
+		log.Fatal().Str("error", err.Error()).Msg("阿里云短信客户端创建失败")
 	}
 }
 
