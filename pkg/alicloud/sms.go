@@ -2,6 +2,7 @@ package alicloud
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk"
@@ -103,9 +104,9 @@ func SendSMS(mobile,templateParam string) error {
 	// 短信签名名称，必填
 	request.QueryParams["SignName"] = viper.GetString("Aliyun.SMS.SignName")
 	// 短信模板ID，必填
-	request.QueryParams["TemplateCode"] = viper.GetString("Aliyun.SMS.SMS_189826703")
+	request.QueryParams["TemplateCode"] = viper.GetString("Aliyun.SMS.TemplateCode")
 	// 短信模板对应的实际值：{"code":"1111"}
-	request.QueryParams["TemplateParam"] = templateParam
+	request.QueryParams["TemplateParam"] = fmt.Sprintf(`{"code":"%s"}`,templateParam)
 
 	response,err := a.smsClt.ProcessCommonRequest(request)
 	if err != nil {

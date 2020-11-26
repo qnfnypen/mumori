@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"regexp"
+
 	"github.com/gin-gonic/gin"
 	"github.com/qnfnypen/mumori/dao/opredis"
 	"github.com/qnfnypen/mumori/http/internal"
@@ -37,12 +39,17 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	// 将用户信息存入MySQL
+	// user := models.User{
+
+	// }
+
 	internal.ResBaseInfo(c, myerror.Success)
 }
 
 // Login 用户登录 -- 密码登录
 // @Summary 用户登录
-// @Description 用户使用昵称/邮箱/手机，并使用密码进行登录
+// @Description 用户使用用户名/邮箱/手机，并使用密码进行登录
 // @Accept json
 // @Produce json
 // @Param login_request body internal.LoginRequest true "用户登录参数"
@@ -50,6 +57,19 @@ func Register(c *gin.Context) {
 // @Failure 400 {ogject} internal.ResponseBase  "{code:400,message:"失败"}"
 // @Router /auth/login [post]
 func Login(c *gin.Context) {
+	var lgParam internal.LoginRequest
+	if err := c.ShouldBindJSON(&lgParam); err != nil {
+		internal.ResBaseInfo(c, myerror.ErrParseParam)
+		return
+	}
+	// 判断输入的是手机、邮箱或用户名
+	// 手机：^1\d{10}$
+	// 邮箱：\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$
+	account := lgParam.Account
+	isPhone, _ := regexp.MatchString(`^1\d{10}$`, account)
+	if isPhone {
+
+	}
 
 }
 
@@ -67,6 +87,24 @@ func FastLogin(c *gin.Context) {
 }
 
 // SendCaptcha 发送验证码
+// @Summary 发送验证码
+// @Description 进行人机验证，发送验证码
+// Accept json
+// @Produce json
+// @Param send_captcha_request body internal.CaptchaRequest "发送验证码参数"
+// @Success 200 {object} internal.ResponseBase  "{code:200,message:"成功"}"
+// @Failure 400 {ogject} internal.ResponseBase  "{code:400,message:"失败"}"
+// @Router /auth/send_captcha [post]
 func SendCaptcha(c *gin.Context) {
+
+}
+
+// CheckUserName 检测用户名是否已被注册
+func CheckUserName(c *gin.Context) {
+
+}
+
+// CheckPhone 检测手机号是否已被注册
+func CheckPhone(c *gin.Context) {
 
 }

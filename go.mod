@@ -3,7 +3,7 @@ module github.com/qnfnypen/mumori
 go 1.15
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.683
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.696
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
@@ -16,7 +16,7 @@ require (
 	github.com/rs/zerolog v1.20.0
 	github.com/spf13/viper v1.7.1
 	github.com/ugorji/go v1.2.0 // indirect
-	golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9
+	golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect

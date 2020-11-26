@@ -51,6 +51,8 @@ func GenerateEngine() *gin.Engine {
 	auth := engine.Group("/auth")
 	{
 		auth.POST("/send_captcha", controllers.SendCaptcha)
+		auth.POST("/register_check_username",controllers.CheckUserName)
+		auth.POST("/register_check_phone",controllers.CheckPhone)
 		auth.POST("/register", controllers.Register)
 		auth.POST("/login", controllers.Login)
 		auth.POST("/fast_login", controllers.FastLogin)
