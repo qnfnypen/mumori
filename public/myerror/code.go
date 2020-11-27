@@ -10,6 +10,8 @@ const (
 	ErrTwoPassword
 	// ErrCaptcha 验证码错误
 	ErrCaptcha
+	// ErrRegister 服务器错误，用户注册失败
+	ErrRegister
 
 	// Success 成功
 	Success ErrCode = 200

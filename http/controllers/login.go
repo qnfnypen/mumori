@@ -4,9 +4,12 @@ import (
 	"regexp"
 
 	"github.com/gin-gonic/gin"
+	"github.com/qnfnypen/mumori/dao/opmysql"
 	"github.com/qnfnypen/mumori/dao/opredis"
 	"github.com/qnfnypen/mumori/http/internal"
+	"github.com/qnfnypen/mumori/models"
 	"github.com/qnfnypen/mumori/public/myerror"
+	"github.com/rs/zerolog/log"
 
 	// 读取配置文件
 	_ "github.com/qnfnypen/mumori/public"
@@ -40,9 +43,18 @@ func Register(c *gin.Context) {
 	}
 
 	// 将用户信息存入MySQL
-	// user := models.User{
-
-	// }
+	// 本打算使用加密算法生成UID的，现在直接使用数据库从2020开始递增
+	user := models.User{
+		UserName: regParam.UserName,
+		Phone: regParam.Phone,
+		Password: regParam.Password,
+	}
+	err = opmysql.StoreUserInfo(user)
+	if err != nil {
+		internal.ResBaseInfo(c,myerror.ErrRegister)
+		log.Debug().Str("error",err.Error()).Msg("数据库写入用户信息失败")
+		return
+	}
 
 	internal.ResBaseInfo(c, myerror.Success)
 }

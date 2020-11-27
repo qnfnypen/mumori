@@ -6,6 +6,7 @@ var errmsg = map[ErrCode]string{
 	ErrParseParam:"请求参数错误",
 	ErrTwoPassword:"两次输入的密码不一致",
 	ErrCaptcha:"验证码错误",
+	ErrRegister:"服务器错误，用户注册失败",
 }
 
 // GetMsg 根据错误码获取错误信息

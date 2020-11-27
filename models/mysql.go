@@ -10,7 +10,7 @@ import (
 // User 用户信息
 type User struct {
 	ID               int        `gorm:"column:id"`
-	UID              string     `gorm:"column:uid"`
+	UID              int        `gorm:"column:uid"`
 	UserName         string     `gorm:"column:user_name"`
 	Phone            string     `gorm:"column:phone"`
 	Email            string     `gorm:"column:email"`
