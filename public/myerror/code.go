@@ -12,6 +12,22 @@ const (
 	ErrCaptcha
 	// ErrRegister 服务器错误，用户注册失败
 	ErrRegister
+	// ErrNameOrPassword 用户名或密码错误
+	ErrNameOrPassword
+	// ErrPhone 手机号错误
+	ErrPhone
+	// ErrUserNameEmpty 用户名不能为空
+	ErrUserNameEmpty
+	// ErrPhoneEmpty 手机号不能为空
+	ErrPhoneEmpty
+	// ErrUserNameUsed 用户名已被使用
+	ErrUserNameUsed
+	// ErrPhoneUsed 手机号已被使用
+	ErrPhoneUsed
+	// ErrSendSMS 短信验证码发送失败
+	ErrSendSMS
+	// ErrAuthenticateSig 滑块验证失败
+	ErrAuthenticateSig
 
 	// Success 成功
 	Success ErrCode = 200

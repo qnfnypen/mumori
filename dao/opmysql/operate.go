@@ -1,6 +1,8 @@
 package opmysql
 
 import (
+	"errors"
+
 	"github.com/qnfnypen/mumori/models"
 	"github.com/qnfnypen/mumori/utils"
 )
@@ -22,6 +24,10 @@ func CheckUserInfo(account, password, category string) error {
 		db.Where("email = ?",account).First(&user)
 	}
 
+	if user.UID < 2020 {
+		return errors.New("该用户不存在")
+	}
+	
 	return utils.CompareHashAndPassword(password,user.Password)
 }
 
