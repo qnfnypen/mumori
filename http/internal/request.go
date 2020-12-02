@@ -12,7 +12,7 @@ type RegisterRequest struct {
 // CaptchaRequest 发送验证码参数
 type CaptchaRequest struct {
 	Phone string `json:"phone" binding:"required"`
-	NC struct {
+	NC    struct {
 		Token     string `json:"token" binding:"required"`     // 滑块验证码token
 		Sig       string `json:"sig" binding:"required"`       // 滑块验证码sig
 		Scene     string `json:"scene" binding:"required"`     // 滑块验证码scene
@@ -30,4 +30,12 @@ type LoginRequest struct {
 type FastloginRequest struct {
 	Phone   string `json:"phone" binding:"required"`
 	Captcha string `json:"captcha" binding:"required"`
+}
+
+// ForgetPasswordRequest 忘记密码
+type ForgetPasswordRequest struct {
+	Phone           string `json:"phone" binding:"required"`
+	Captcha         string `json:"captcha" binding:"required"`
+	NewPassword     string `json:"new_password" binding:"required"`
+	PasswordConfirm string `json:"password_confirm" binding:"required"`
 }

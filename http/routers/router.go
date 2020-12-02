@@ -56,6 +56,7 @@ func GenerateEngine() *gin.Engine {
 		auth.POST("/register", controllers.Register)
 		auth.POST("/login", controllers.Login)
 		auth.POST("/fast_login", controllers.FastLogin)
+		auth.POST("/forget_password",controllers.ForgetPassword)
 	}
 
 	return engine

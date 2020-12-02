@@ -15,6 +15,7 @@ var errmsg = map[ErrCode]string{
 	ErrPhoneUsed:"该手机号已被注册，请转到登录页面",
 	ErrSendSMS:"验证码发送失败",
 	ErrAuthenticateSig:"滑块验证码失败",
+	ErrUpdatePassword:"修改密码失败",
 }
 
 // GetMsg 根据错误码获取错误信息

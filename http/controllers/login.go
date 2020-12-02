@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"regexp"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/qnfnypen/mumori/dao/opmysql"
@@ -19,6 +20,7 @@ import (
 )
 
 // Register 用户注册
+// @Tags 登录
 // @Summary 用户注册
 // @Description 用户根据手机号进行注册
 // @Accept json
@@ -39,8 +41,8 @@ func Register(c *gin.Context) {
 		return
 	}
 	// 判断验证码是否正确
-	captcha, err := opredis.GetCaptcha(regParam.Phone)
-	if err != nil || captcha != regParam.Captcha {
+	captcha, _ := opredis.GetCaptcha(regParam.Phone)
+	if captcha != regParam.Captcha {
 		internal.ResBaseInfo(c, myerror.ErrCaptcha)
 		return
 	}
@@ -48,11 +50,13 @@ func Register(c *gin.Context) {
 	// 将用户信息存入MySQL
 	// 本打算使用加密算法生成UID的，现在直接使用数据库从2020开始递增
 	user := models.User{
-		UserName: regParam.UserName,
-		Phone:    regParam.Phone,
-		Password: regParam.Password,
+		UserName:      regParam.UserName,
+		Phone:         regParam.Phone,
+		Password:      regParam.Password,
+		LastLoginIP:   c.ClientIP(),
+		LastLoginTime: time.Now().Format("2006-01-02 15:04:05"),
 	}
-	err = opmysql.StoreUserInfo(user)
+	err := opmysql.StoreUserInfo(user)
 	if err != nil {
 		internal.ResBaseInfo(c, myerror.ErrRegister)
 		log.Debug().Str("error", err.Error()).Msg("数据库写入用户信息失败")
@@ -63,6 +67,7 @@ func Register(c *gin.Context) {
 }
 
 // Login 用户登录 -- 密码登录
+// @Tags 登录
 // @Summary 用户登录
 // @Description 用户使用用户名/邮箱/手机，并使用密码进行登录
 // @Accept json
@@ -85,6 +90,8 @@ func Login(c *gin.Context) {
 	if isPhone {
 		err := opmysql.CheckUserInfo(lgParam.Account, lgParam.Password, "phone")
 		if err == nil {
+			uid := opmysql.GetUserUID("phone", isPhone)
+			opmysql.UpdateUserInfo(uid, models.User{LastLoginIP: c.ClientIP(), LastLoginTime: time.Now().Format("2006-01-02 15:04:05")})
 			internal.ResBaseInfo(c, myerror.Success)
 			return
 		}
@@ -93,12 +100,16 @@ func Login(c *gin.Context) {
 	if isEmail {
 		err := opmysql.CheckUserInfo(lgParam.Account, lgParam.Password, "email")
 		if err == nil {
+			uid := opmysql.GetUserUID("email", isEmail)
+			opmysql.UpdateUserInfo(uid, models.User{LastLoginIP: c.ClientIP(), LastLoginTime: time.Now().Format("2006-01-02 15:04:05")})
 			internal.ResBaseInfo(c, myerror.Success)
 			return
 		}
 	}
 	err := opmysql.CheckUserInfo(lgParam.Account, lgParam.Password, "username")
 	if err == nil {
+		uid := opmysql.GetUserUID("username", account)
+		opmysql.UpdateUserInfo(uid, models.User{LastLoginIP: c.ClientIP(), LastLoginTime: time.Now().Format("2006-01-02 15:04:05")})
 		internal.ResBaseInfo(c, myerror.Success)
 		return
 	}
@@ -107,6 +118,7 @@ func Login(c *gin.Context) {
 }
 
 // FastLogin 快捷登录 -- 手机验证码登录
+// @Tags 登录
 // @Summary 用户快捷登录
 // @Description 用户使用手机和验证码快捷登录
 // @Accept json
@@ -143,10 +155,14 @@ func FastLogin(c *gin.Context) {
 		}
 	}
 
+	uid := opmysql.GetUserUID("phone", flg.Phone)
+	opmysql.UpdateUserInfo(uid, models.User{LastLoginIP: c.ClientIP(), LastLoginTime: time.Now().Format("2006-01-02 15:04:05")})
+
 	internal.ResBaseInfo(c, myerror.Success)
 }
 
 // SendCaptcha 发送验证码
+// @Tags 登录
 // @Summary 发送验证码
 // @Description 进行人机验证，发送验证码
 // Accept json
@@ -163,22 +179,23 @@ func SendCaptcha(c *gin.Context) {
 		return
 	}
 
-	b,_ := alicloud.AuthenticateSig(cap.NC.SessionID,cap.NC.Token,cap.NC.Sig,cap.NC.Scene,c.Request.Host)
+	b, _ := alicloud.AuthenticateSig(cap.NC.SessionID, cap.NC.Token, cap.NC.Sig, cap.NC.Scene, c.Request.Host)
 	if b {
-		err := alicloud.SendSMS(cap.Phone,utils.GenerateCode(6))
+		err := alicloud.SendSMS(cap.Phone, utils.GenerateCode(6))
 		if err != nil {
-			internal.ResBaseInfo(c,myerror.ErrSendSMS)
+			internal.ResBaseInfo(c, myerror.ErrSendSMS)
 			return
 		}
 
-		internal.ResBaseInfo(c,myerror.Success)
+		internal.ResBaseInfo(c, myerror.Success)
 		return
 	}
 
-	internal.ResBaseInfo(c,myerror.ErrAuthenticateSig)
+	internal.ResBaseInfo(c, myerror.ErrAuthenticateSig)
 }
 
 // CheckUserName 检测用户名是否已被注册
+// @Tags 登录
 // @Summary 检测用户名是否已被占用
 // @Description 检查已有用户，判断该用户名是否已经被占用
 // @Accept json
@@ -203,6 +220,7 @@ func CheckUserName(c *gin.Context) {
 }
 
 // CheckPhone 检测手机号是否已被注册
+// @Tags 登录
 // @Summary 检测手机号是否已被注册
 // @Description 检测注册过的手机号，判断该手机号是否已被注册
 // @Accept json
@@ -224,4 +242,44 @@ func CheckPhone(c *gin.Context) {
 	}
 
 	internal.ResBaseInfo(c, myerror.ErrPhoneUsed)
+}
+
+// ForgetPassword 忘记密码
+// @Tags 登录
+// @Summary 忘记密码
+// @Description 用户修改登录密码
+// @Accept json
+// @Produce json
+// @Param forget_password body internal.ForgetPasswordRequest "忘记密码参数"
+// @Success 200 {object} internal.ResponseBase  "{code:200,message:"成功"}"
+// @Failure 400 {ogject} internal.ResponseBase  "{code:400,message:"失败"}"
+// @Router /auth/forget_password [post]
+func ForgetPassword(c *gin.Context) {
+	var fp internal.ForgetPasswordRequest
+	err := c.ShouldBindJSON(&fp)
+	if err != nil {
+		internal.ResBaseInfo(c, myerror.ErrParseParam)
+		return
+	}
+
+	// 判断两次密码是否相同
+	if fp.NewPassword != fp.PasswordConfirm {
+		internal.ResBaseInfo(c, myerror.ErrTwoPassword)
+		return
+	}
+	// 判断验证码是否正确
+	captcha, _ := opredis.GetCaptcha(fp.Phone)
+	if fp.Captcha != captcha {
+		internal.ResBaseInfo(c, myerror.ErrCaptcha)
+		return
+	}
+
+	uid := opmysql.GetUserUID("phone", fp.Phone)
+	err = opmysql.UpdateUserInfo(uid, models.User{Password: fp.NewPassword})
+	if err != nil {
+		internal.ResBaseInfo(c, myerror.ErrUpdatePassword)
+		return
+	}
+
+	internal.ResBaseInfo(c, myerror.Success)
 }

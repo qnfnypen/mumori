@@ -28,6 +28,8 @@ const (
 	ErrSendSMS
 	// ErrAuthenticateSig 滑块验证失败
 	ErrAuthenticateSig
+	// ErrUpdatePassword 修改用户密码失败
+	ErrUpdatePassword
 
 	// Success 成功
 	Success ErrCode = 200
