@@ -123,7 +123,7 @@ func Login(c *gin.Context) {
 // @Description 用户使用手机和验证码快捷登录
 // @Accept json
 // @Produce json
-// @Param fast_login_request body internal.FastloginRequest "用户快捷登录参数"
+// @Param fast_login_request body internal.FastloginRequest true "用户快捷登录参数"
 // @Success 200 {object} internal.ResponseBase  "{code:200,message:"成功"}"
 // @Failure 400 {ogject} internal.ResponseBase  "{code:400,message:"失败"}"
 // @Router /auth/fast_login [post]
@@ -167,7 +167,7 @@ func FastLogin(c *gin.Context) {
 // @Description 进行人机验证，发送验证码
 // Accept json
 // @Produce json
-// @Param send_captcha_request body internal.CaptchaRequest "发送验证码参数"
+// @Param send_captcha_request body internal.CaptchaRequest true "发送验证码参数"
 // @Success 200 {object} internal.ResponseBase  "{code:200,message:"成功"}"
 // @Failure 400 {ogject} internal.ResponseBase  "{code:400,message:"失败"}"
 // @Router /auth/send_captcha [post]
@@ -250,7 +250,7 @@ func CheckPhone(c *gin.Context) {
 // @Description 用户修改登录密码
 // @Accept json
 // @Produce json
-// @Param forget_password body internal.ForgetPasswordRequest "忘记密码参数"
+// @Param forget_password body internal.ForgetPasswordRequest true "忘记密码参数"
 // @Success 200 {object} internal.ResponseBase  "{code:200,message:"成功"}"
 // @Failure 400 {ogject} internal.ResponseBase  "{code:400,message:"失败"}"
 // @Router /auth/forget_password [post]
