@@ -18,7 +18,7 @@ import (
 	// 读取配置文件
 	_ "github.com/qnfnypen/mumori/public"
 	// 初始化swagger docs
-	_ "github.com/qnfnypen/mumori/docs"
+	// _ "github.com/qnfnypen/mumori/docs"
 )
 
 // GenerateEngine 生成路由引擎

@@ -11,6 +11,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
+	"github.com/qnfnypen/mumori/dao/opmysql"
+	"github.com/qnfnypen/mumori/dao/opredis"
+
 	// 读取配置文件
 	_ "github.com/qnfnypen/mumori/public"
 )
@@ -45,12 +48,16 @@ func init() {
 		viper.GetString("Aliyun.SMS.AccessKeySecret"),
 	)
 	if err != nil {
+		defer func() {
+			opmysql.CloseMySQL()
+			opredis.CloseRedis()
+		}()
 		log.Fatal().Str("error", err.Error()).Msg("阿里云短信客户端创建失败")
 	}
 }
 
 // AuthenticateSig 滑块验证
-func AuthenticateSig(sessionID,token,sig,scene,remoteIP string) (bool, error) {
+func AuthenticateSig(sessionID, token, sig, scene, remoteIP string) (bool, error) {
 	request := requests.NewCommonRequest()
 	request.Method = http.MethodPost
 	request.Scheme = "https"
@@ -70,28 +77,28 @@ func AuthenticateSig(sessionID,token,sig,scene,remoteIP string) (bool, error) {
 	// 客户端IP。必填参数，后端填写
 	request.QueryParams["RemoteIp"] = remoteIP
 
-	response,err := a.sigClt.ProcessCommonRequest(request)
+	response, err := a.sigClt.ProcessCommonRequest(request)
 	if err != nil {
-		return false,err
+		return false, err
 	}
 
-	log.Info().Msgf("aliyun send sms response: %v",response)
-	
+	log.Info().Msgf("aliyun send sms response: %v", response)
+
 	respbyte := response.GetHttpContentBytes()
 	var sigResp resp
-	err = json.Unmarshal(respbyte,&sigResp)
+	err = json.Unmarshal(respbyte, &sigResp)
 	if err != nil {
-		return false,err
+		return false, err
 	}
 	if sigResp.Code == 100 {
-		return true,nil
+		return true, nil
 	}
 
-	return false,nil
+	return false, nil
 }
 
 // SendSMS 发送验证码
-func SendSMS(mobile,templateParam string) error {
+func SendSMS(mobile, templateParam string) error {
 	request := requests.NewCommonRequest()
 	request.Method = http.MethodPost
 	request.Scheme = "https"
@@ -106,14 +113,14 @@ func SendSMS(mobile,templateParam string) error {
 	// 短信模板ID，必填
 	request.QueryParams["TemplateCode"] = viper.GetString("Aliyun.SMS.TemplateCode")
 	// 短信模板对应的实际值：{"code":"1111"}
-	request.QueryParams["TemplateParam"] = fmt.Sprintf(`{"code":"%s"}`,templateParam)
+	request.QueryParams["TemplateParam"] = fmt.Sprintf(`{"code":"%s"}`, templateParam)
 
-	response,err := a.smsClt.ProcessCommonRequest(request)
+	response, err := a.smsClt.ProcessCommonRequest(request)
 	if err != nil {
 		return err
 	}
 
-	log.Info().Msgf("aliyun send sms response: %v",response)
+	log.Info().Msgf("aliyun send sms response: %v", response)
 
 	return nil
 }

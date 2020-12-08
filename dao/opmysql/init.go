@@ -35,3 +35,8 @@ func init() {
 	db.DB().SetMaxIdleConns(viper.GetInt("Driver.MySQL.MaxIdleConns"))
 	db.DB().SetMaxOpenConns(viper.GetInt("Driver.MySQL.MaxOpenConns"))
 }
+
+// CloseMySQL 关闭MySQL连接
+func CloseMySQL() {
+	db.Close()
+}

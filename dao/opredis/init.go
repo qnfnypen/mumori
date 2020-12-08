@@ -25,3 +25,8 @@ func init() {
 		log.Fatal().Str("error",err.Error()).Msg("连接Redis数据库失败")
 	}
 }
+
+// CloseRedis 关闭Redis连接
+func CloseRedis() {
+	rdb.Close()
+}

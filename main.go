@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/qnfnypen/mumori/dao/opmysql"
+	"github.com/qnfnypen/mumori/dao/opredis"
 	"github.com/qnfnypen/mumori/http/routers"
 	_ "github.com/qnfnypen/mumori/public"
 	"github.com/rs/zerolog/log"
@@ -30,6 +32,10 @@ func main() {
 		<-quit
 
 		if err := server.Shutdown(context.Background()); err != nil {
+			defer func() {
+				opmysql.CloseMySQL()
+				opredis.CloseRedis()
+			}()
 			log.Fatal().Str("error", err.Error()).Msg("关闭服务器")
 		}
 	}()
@@ -37,6 +43,10 @@ func main() {
 	log.Info().Msg("启动服务器")
 	err := server.ListenAndServe()
 	if err != nil {
+		defer func() {
+			opmysql.CloseMySQL()
+			opredis.CloseRedis()
+		}()
 		if err == http.ErrServerClosed {
 			log.Info().Msg("服务器响应请求而关闭")
 		} else {

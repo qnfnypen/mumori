@@ -33,18 +33,18 @@ func CheckUserInfo(account, password, category string) error {
 }
 
 // UpdateUserInfo 更新用户信息
-func UpdateUserInfo(uid int,user models.User) error {
+func UpdateUserInfo(uid int, user models.User) error {
 	var oldUser models.User
-	db.Where("uid = ?",uid).First(&oldUser)
+	db.Where("uid = ?", uid).First(&oldUser)
 
 	return db.Model(&oldUser).Updates(user).Error
 }
 
 // GetUserUID 获取用户的UID
-func GetUserUID(column string,value interface{}) int {
+func GetUserUID(column string, value interface{}) int {
 	var user models.User
-	str := fmt.Sprintf(`%s = ?`,column)
-	db.Where(str,value).First(&user)
+	str := fmt.Sprintf(`%s = ?`, column)
+	db.Where(str, value).First(&user)
 
 	return user.UID
 }

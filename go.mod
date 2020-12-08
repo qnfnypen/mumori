@@ -3,7 +3,6 @@ module github.com/qnfnypen/mumori
 go 1.15
 
 require (
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.751
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
@@ -18,7 +17,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
-	github.com/swaggo/swag v1.5.1
+	github.com/swaggo/swag v1.7.0 // indirect
 	github.com/ugorji/go v1.2.1 // indirect
 	golang.org/x/crypto v0.0.0-20201203163018-be400aefbc4c
 	golang.org/x/sys v0.0.0-20201204225414-ed752295db88 // indirect
