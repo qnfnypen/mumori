@@ -15,11 +15,12 @@ type User struct {
 	Email            string     `gorm:"column:email"`
 	Password         string     `gorm:"column:password"`
 	LastLoginIP      string     `gorm:"column:last_login_ip"`
-	LastLoginAddress string     `gorm:"column:last_login_address"`
+	// LastLoginAddress string     `gorm:"column:last_login_address"`
 	LastLoginTime    string     `gorm:"column:last_login_time"`
 	Status           int8       `gorm:"column:status"`
 	CreatedAt        time.Time  `gorm:"column:created_at"`
-	DeletedAt        *time.Time `gorm:"column:deleated_at"`
+	// DeletedAt        *time.Time `gorm:"column:deleated_at"`
+	UpdatedAt        time.Time  `gorm:"column:updated_at"`
 }
 
 // BeforeSave 在保存前回调，对密码进行加密
