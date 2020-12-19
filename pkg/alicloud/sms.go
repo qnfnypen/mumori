@@ -11,6 +11,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
+	"github.com/qnfnypen/mumori/dao/opmysql"
+	"github.com/qnfnypen/mumori/dao/opredis"
+
 	// 读取配置文件
 	_ "github.com/qnfnypen/mumori/public"
 )
@@ -45,6 +48,10 @@ func init() {
 		viper.GetString("Aliyun.SMS.AccessKeySecret"),
 	)
 	if err != nil {
+		defer func() {
+			opmysql.CloseMySQL()
+			opredis.CloseRedis()
+		}()
 		log.Fatal().Str("error", err.Error()).Msg("阿里云短信客户端创建失败")
 	}
 }
