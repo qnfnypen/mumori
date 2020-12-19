@@ -181,12 +181,14 @@ func SendCaptcha(c *gin.Context) {
 
 	b, _ := alicloud.AuthenticateSig(cap.NC.SessionID, cap.NC.Token, cap.NC.Sig, cap.NC.Scene, c.Request.Host)
 	if b {
-		err := alicloud.SendSMS(cap.Phone, utils.GenerateCode(6))
+		captcha := utils.GenerateCode(6)
+		err := alicloud.SendSMS(cap.Phone, captcha)
 		if err != nil {
 			internal.ResBaseInfo(c, myerror.ErrSendSMS)
 			return
 		}
 
+		opredis.SetCaptchaFor5M(cap.Phone,captcha)
 		internal.ResBaseInfo(c, myerror.Success)
 		return
 	}
